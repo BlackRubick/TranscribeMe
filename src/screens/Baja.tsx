@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     width: "50%"
   },
   loginContainer: {
-    width: '80%',
+    width: '100%',
     paddingHorizontal: 20,
     paddingVertical: 80,
     borderTopLeftRadius: 50,
@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '20%',
     backgroundColor: 'white',
-    left:"10%"
   },
   logo: {
     width: 50,
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const LoginReg: React.FC<Props> = ({ navigation }) => {
+const Baja: React.FC<Props> = ({ navigation }) => {
   return (
     <LinearGradient // Usa LinearGradient en lugar de View
       colors={['#5E9CFA', '#8A2BE2']} // Array de colores para el gradiente (azul a morado)
@@ -183,4 +182,4 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-export default LoginReg;
+export default Baja;

@@ -4,14 +4,12 @@ import AppNavigator from './src/navigation/AppNavigator';
 import * as Font from 'expo-font';
 
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <NavigationContainer>
       <AppNavigator />
     </NavigationContainer>
   );
 };
-
-
 
 export default App;
