@@ -4,17 +4,15 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
-  Modal,
-  TouchableWithoutFeedback,
   ScrollView,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome } from "@expo/vector-icons";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
-// Login screen navigation prop type
 type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
 
 type Props = {
@@ -24,25 +22,6 @@ type Props = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#5E9CFA",
-  },
-  menuIcon: {
-    marginLeft: 10,
-  },
-  profileIcon: {
-    marginRight: 10,
-  },
-  headerText: {
-    fontFamily: "K2D",
-    color: "white",
-    fontSize: 24,
-    fontWeight: "bold",
   },
   classInfoContainer: {
     padding: 16,
@@ -98,23 +77,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 10,
-    backgroundColor: "#FFFFFF",
-    borderTopWidth: 1,
-    borderTopColor: "#ccc",
-  },
-  footerButton: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footerButtonText: {
-    fontFamily: "K2D",
-    color: "black",
-    fontSize: 15,
-  },
 });
 
 // Component for each transcript item
@@ -138,7 +100,6 @@ const TranscriptItem: React.FC<TranscriptItemProps> = ({ title, author, date }) 
   </View>
 );
 
-// Main component Verclase
 const Verclase: React.FC<Props> = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -148,57 +109,8 @@ const Verclase: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={["#5E9CFA", "#8A2BE2"]}
-        style={styles.header}
-      >
-        <TouchableOpacity onPress={toggleMenu}>
-          <FontAwesome name="bars" size={24} color="white" style={styles.menuIcon} />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>TranscribeMe</Text>
-        <FontAwesome name="user" size={24} color="white" style={styles.profileIcon} />
-      </LinearGradient>
+      <Header />
 
-      {/* Menu Modal */}
-      <Modal
-        transparent={true}
-        visible={menuVisible}
-        animationType="fade"
-        onRequestClose={toggleMenu}
-      >
-        <TouchableWithoutFeedback onPress={toggleMenu}>
-          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", justifyContent: "flex-start", alignItems: "flex-start" }}>
-            <View style={{ backgroundColor: "white", padding: 20, borderRadius: 8, marginTop: 50, marginLeft: 10 }}>
-              <TouchableOpacity
-                style={{ paddingVertical: 10 }}
-                onPress={() => { toggleMenu(); navigation.navigate("Cerrar"); }}
-              >
-                <Text style={{ fontFamily: "K2D", fontSize: 18, color: "black" }}>Cerrar Sesion</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ paddingVertical: 10 }}
-                onPress={() => { toggleMenu(); navigation.navigate("Archivo"); }}
-              >
-                <Text style={{ fontFamily: "K2D", fontSize: 18, color: "black" }}>Clases Archivadas</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ paddingVertical: 10 }}
-                onPress={() => { toggleMenu(); navigation.navigate("Baja"); }}
-              >
-                <Text style={{ fontFamily: "K2D", fontSize: 18, color: "black" }}>Dar de Baja a una Materia</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ paddingVertical: 10 }}
-                onPress={() => { toggleMenu(); navigation.navigate("Create"); }}
-              >
-                <Text style={{ fontFamily: "K2D", fontSize: 18, color: "black" }}>Crear Clase</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-
-      {/* Content */}
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}>
         <View style={styles.classInfoContainer}>
           <Text style={styles.classTitle}>Minería de datos</Text>
@@ -232,21 +144,7 @@ const Verclase: React.FC<Props> = ({ navigation }) => {
         />
       </ScrollView>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate("Home")}>
-          <FontAwesome name="home" size={24} color="black" />
-          <Text style={styles.footerButtonText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate("Home")}>
-          <FontAwesome name="plus" size={24} color="black" />
-          <Text style={styles.footerButtonText}>Unirme a clase</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate("Home")}>
-          <FontAwesome name="file-text" size={24} color="black" />
-          <Text style={styles.footerButtonText}>Unirme a transcripción</Text>
-        </TouchableOpacity>
-      </View>
+      <Footer />
     </View>
   );
 };
