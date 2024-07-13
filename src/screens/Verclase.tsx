@@ -12,11 +12,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome } from "@expo/vector-icons";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import CompartirQR from '../components/CompartirQR';
 
-type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
+type VerClaseScreenNavigationProp = StackNavigationProp<RootStackParamList, "Verclase">;
 
 type Props = {
-  navigation: LoginRegScreenNavigationProp;
+  navigation: VerClaseScreenNavigationProp;
 };
 
 const styles = StyleSheet.create({
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
   transcriptIcons: {
     flexDirection: "row",
     alignItems: "center",
-  },
+  }
 });
 
 // Component for each transcript item
@@ -84,10 +85,12 @@ interface TranscriptItemProps {
   title: string;
   author: string;
   date: string;
+  onPress: () => void;
+  onShare: () => void;
 }
 
-const TranscriptItem: React.FC<TranscriptItemProps> = ({ title, author, date }) => (
-  <View style={styles.transcriptCard}>
+const TranscriptItem: React.FC<TranscriptItemProps> = ({ title, author, date, onPress, onShare }) => (
+  <TouchableOpacity onPress={onPress} style={styles.transcriptCard}>
     <View style={styles.transcriptTextContainer}>
       <Text style={styles.transcriptTitle}>{title}</Text>
       <Text style={styles.transcriptSubtitle}>{author}</Text>
@@ -95,16 +98,23 @@ const TranscriptItem: React.FC<TranscriptItemProps> = ({ title, author, date }) 
     <View style={styles.transcriptIcons}>
       <Text style={styles.transcriptDate}>{date}</Text>
       <FontAwesome name="calendar" size={20} color="gray" style={{ marginHorizontal: 5 }} />
-      <FontAwesome name="share-alt" size={20} color="gray" />
+      <TouchableOpacity onPress={onShare}>
+        <FontAwesome name="share-alt" size={20} color="gray" />
+      </TouchableOpacity>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
 const Verclase: React.FC<Props> = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
+  };
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
   };
 
   return (
@@ -126,23 +136,33 @@ const Verclase: React.FC<Props> = ({ navigation }) => {
           title="Título de la transcripción"
           author="Horacio Irán Solís Cisneros"
           date="01/12/2003"
+          onPress={() => navigation.navigate('VerTranscripciones')}
+          onShare={toggleModal}
         />
         <TranscriptItem
           title="Título de la transcripción"
           author="Horacio Irán Solís Cisneros"
           date="01/12/2003"
+          onPress={() => navigation.navigate('VerTranscripciones')}
+          onShare={toggleModal}
         />
         <TranscriptItem
           title="Título de la transcripción"
           author="Horacio Irán Solís Cisneros"
           date="01/12/2003"
+          onPress={() => navigation.navigate('VerTranscripciones')}
+          onShare={toggleModal}
         />
         <TranscriptItem
           title="Título de la transcripción"
           author="Horacio Irán Solís Cisneros"
           date="01/12/2003"
+          onPress={() => navigation.navigate('VerTranscripciones')}
+          onShare={toggleModal}
         />
       </ScrollView>
+
+      <CompartirQR visible={modalVisible} onClose={toggleModal} />
 
       <Footer />
     </View>

@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
         <FontAwesome name="plus" size={24} color="black" />
         <Text style={styles.footerButtonText}>Unirme a clase</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('JoinTranscription')}>
         <FontAwesome name="file-text" size={24} color="black" />
         <Text style={styles.footerButtonText}>Unirme a transcripción</Text>
       </TouchableOpacity>
