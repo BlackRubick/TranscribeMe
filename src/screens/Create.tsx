@@ -6,15 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Modal,
-  TouchableWithoutFeedback,
-  ScrollView,
   Alert,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { LinearGradient } from "expo-linear-gradient";
-import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -83,7 +79,40 @@ const Create: React.FC<Props> = ({ navigation }) => {
   const [teacher, setTeacher] = useState("");
   const [status, setStatus] = useState("active");
 
+  const validateFields = () => {
+    if (name.length === 0 || name.length > 50) {
+      Alert.alert("Error en la creación", "El nombre de la clase debe tener entre 1 y 50 caracteres");
+      return false;
+    }
+
+    const gradeNumber = parseInt(grade);
+    if (isNaN(gradeNumber) || gradeNumber < 1 || gradeNumber > 12) {
+      Alert.alert("Error en la creación", "El grado debe ser un número entre 1 y 12");
+      return false;
+    }
+
+    if (group.length === 0 || group.length > 10) {
+      Alert.alert("Error en la creación", "El grupo debe tener entre 1 y 10 caracteres");
+      return false;
+    }
+
+    const numberOfStudentsNumber = parseInt(numberOfStudents);
+    if (isNaN(numberOfStudentsNumber) || numberOfStudentsNumber < 1 || numberOfStudentsNumber > 100) {
+      Alert.alert("Error en la creación", "La cantidad de estudiantes debe ser un número entre 1 y 100");
+      return false;
+    }
+
+    if (teacher.length === 0 || teacher.length > 50) {
+      Alert.alert("Error en la creación", "El nombre del profesor debe tener entre 1 y 50 caracteres");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleCreateClass = async () => {
+    if (!validateFields()) return;
+
     const classData = {
       name,
       number_of_students: parseInt(numberOfStudents),

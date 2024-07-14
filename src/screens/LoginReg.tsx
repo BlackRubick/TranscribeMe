@@ -137,7 +137,22 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const setUser = useUserStore((state) => state.set);
 
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   const handleLogin = async () => {
+    if (!validateEmail(email)) {
+      Alert.alert("Error en el inicio de sesión", "Correo electrónico inválido");
+      return;
+    }
+
+    if (password.length < 6 || password.length > 20) {
+      Alert.alert("Error en el inicio de sesión", "La contraseña debe tener entre 6 y 20 caracteres");
+      return;
+    }
+
     try {
       console.log("Iniciando sesión...");
       console.log("Datos de inicio de sesión:", { email, password });
@@ -191,7 +206,7 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonInactive}
-              onPress={() => navigation.navigate("Register")}
+              onPress={() => navigation.navigate("Login")}
             >
               <Text style={styles.buttonText}>Registrar</Text>
             </TouchableOpacity>

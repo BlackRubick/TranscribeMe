@@ -3,11 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, Animated, TouchableWit
 import { FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { useUserStore } from '../store/UserStore';
 
 const Header: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuAnimation] = useState(new Animated.Value(-250));
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const clearUser = useUserStore((state) => state.clear);
 
   const toggleMenu = () => {
     if (menuVisible) {
@@ -24,6 +26,11 @@ const Header: React.FC = () => {
         useNativeDriver: true,
       }).start();
     }
+  };
+
+  const handleLogout = () => {
+    clearUser();
+    navigation.navigate('LoginReg');
   };
 
   return (
@@ -45,7 +52,7 @@ const Header: React.FC = () => {
         <TouchableWithoutFeedback onPress={toggleMenu}>
           <View style={styles.modalOverlay}>
             <Animated.View style={[styles.menu, { transform: [{ translateX: menuAnimation }] }]}>
-              <TouchableOpacity style={styles.menuItem} onPress={() => { toggleMenu(); navigation.navigate('Cerrar'); }}>
+              <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
                 <FontAwesome name="sign-out" size={20} color="black" style={styles.menuIcon} />
                 <Text style={styles.menuItemText}>Cerrar Sesion</Text>
               </TouchableOpacity>

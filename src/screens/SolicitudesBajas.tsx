@@ -6,7 +6,13 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ConfirmacionBajaModal from '../components/ConfirmacionBajaModal';
 
-const solicitudes = [
+interface Solicitud {
+  id: number;
+  alumno: string;
+  materia: string;
+}
+
+const solicitudes: Solicitud[] = [
   { id: 1, alumno: 'José Manuel Galindo González', materia: 'Matemáticas discretas - 7B' },
   { id: 2, alumno: 'José Manuel Galindo González', materia: 'Matemáticas discretas - 7B' },
   { id: 3, alumno: 'José Manuel Galindo González', materia: 'Matemáticas discretas - 7B' },
@@ -16,9 +22,9 @@ const solicitudes = [
 
 const SolicitudesBajas: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedSolicitud, setSelectedSolicitud] = useState(null);
+  const [selectedSolicitud, setSelectedSolicitud] = useState<Solicitud | null>(null);
 
-  const openModal = (solicitud) => {
+  const openModal = (solicitud: Solicitud) => {
     setSelectedSolicitud(solicitud);
     setModalVisible(true);
   };
