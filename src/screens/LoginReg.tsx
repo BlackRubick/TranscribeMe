@@ -157,7 +157,7 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
       console.log("Iniciando sesión...");
       console.log("Datos de inicio de sesión:", { email, password });
 
-      const response = await fetch('http://10.0.2.2:3003/users/login', {
+      const response = await fetch('http://10.0.2.2:3004/api/v1/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
