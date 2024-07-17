@@ -1,19 +1,10 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Alert,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
-import { LinearGradient } from "expo-linear-gradient";
-import axios from "axios";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
 
@@ -75,9 +66,19 @@ const Create: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState("");
   const [grade, setGrade] = useState("");
   const [group, setGroup] = useState("");
-  const [numberOfStudents, setNumberOfStudents] = useState("");
+  const [numberOfStudents] = useState("0");
   const [teacher, setTeacher] = useState("");
-  const [status, setStatus] = useState("active");
+  const [status] = useState("no archivado");
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const storedUserId = await AsyncStorage.getItem('userId');
+      setUserId(storedUserId);
+    };
+
+    getUserId();
+  }, []);
 
   const validateFields = () => {
     if (name.length === 0 || name.length > 50) {
@@ -96,12 +97,6 @@ const Create: React.FC<Props> = ({ navigation }) => {
       return false;
     }
 
-    const numberOfStudentsNumber = parseInt(numberOfStudents);
-    if (isNaN(numberOfStudentsNumber) || numberOfStudentsNumber < 1 || numberOfStudentsNumber > 100) {
-      Alert.alert("Error en la creación", "La cantidad de estudiantes debe ser un número entre 1 y 100");
-      return false;
-    }
-
     if (teacher.length === 0 || teacher.length > 50) {
       Alert.alert("Error en la creación", "El nombre del profesor debe tener entre 1 y 50 caracteres");
       return false;
@@ -113,9 +108,14 @@ const Create: React.FC<Props> = ({ navigation }) => {
   const handleCreateClass = async () => {
     if (!validateFields()) return;
 
+    if (!userId) {
+      Alert.alert("Error", "Usuario no encontrado");
+      return;
+    }
+
     const classData = {
       name,
-      number_of_students: parseInt(numberOfStudents),
+      number_of_students: 0,
       teacher,
       status,
       group,
@@ -125,9 +125,31 @@ const Create: React.FC<Props> = ({ navigation }) => {
     console.log("Datos de la clase:", classData);
 
     try {
-      const response = await axios.post("http://10.0.2.2:3002/class", classData);
-      console.log("Respuesta del servidor:", response.data);
-      Alert.alert("Éxito", "Clase creada exitosamente");
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+
+      const myHeaders = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+
+      const response = await fetch(`http://10.0.2.2:3004/api/v1/class/post/${userId}`, {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(classData),
+      });
+
+      console.log("Respuesta del servidor:", response);
+      const responseText = await response.text();
+      console.log("Texto de respuesta del servidor:", responseText);
+
+      if (response.ok) {
+        Alert.alert("Éxito", "Clase creada exitosamente");
+      } else {
+        Alert.alert("Error", "Error al crear la clase");
+      }
     } catch (error) {
       console.error("Error al crear la clase:", error);
       Alert.alert("Error", "Error al crear la clase");
@@ -137,11 +159,9 @@ const Create: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Header />
-
       <View style={{ alignItems: "center" }}>
         <Image source={require("../../assets/create.png")} style={styles.illustration} />
       </View>
-
       <View style={styles.formContainer}>
         <Text style={styles.formHeader}>Crear clase</Text>
         <TextInput
@@ -167,13 +187,6 @@ const Create: React.FC<Props> = ({ navigation }) => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Cantidad de estudiantes"
-          placeholderTextColor="#aaa"
-          value={numberOfStudents}
-          onChangeText={setNumberOfStudents}
-        />
-        <TextInput
-          style={styles.input}
           placeholder="Profesor"
           placeholderTextColor="#aaa"
           value={teacher}
@@ -183,7 +196,6 @@ const Create: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.createButtonText}>Crear</Text>
         </TouchableOpacity>
       </View>
-
       <Footer />
     </View>
   );
