@@ -145,39 +145,40 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       Alert.alert("Error en el registro", "Correo electrónico inválido");
       return;
     }
-
+  
     if (password.length < 6 || password.length > 20) {
       Alert.alert("Error en el registro", "La contraseña debe tener entre 6 y 20 caracteres");
       return;
     }
-
+  
     if (name.trim() === "" || surname.trim() === "") {
       Alert.alert("Error en el registro", "El nombre y el apellido no pueden estar vacíos");
       return;
     }
-
+  
     try {
       console.log("Iniciando registro...");
       console.log("Datos de registro:", { email, password, name, surname });
-
+  
+      // Crear el FormData y agregar los campos
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('name', name);
+      formData.append('surname', surname);
+  
+      console.log("Datos FormData:", formData);
+  
       const response = await fetch('http://10.0.2.2:3003/users', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          name,
-          surname,
-        }),
+        body: formData,
       });
-
+  
       console.log("Respuesta del servidor:", response);
-
+  
       const responseText = await response.text();
       console.log("Texto de respuesta del servidor:", responseText);
-
+  
       if (response.ok) {
         const responseData = JSON.parse(responseText);
         console.log("Datos de respuesta:", responseData);
@@ -193,6 +194,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       Alert.alert("Error en el registro", "Hubo un problema al registrar el usuario");
     }
   };
+  
 
   return (
     <LinearGradient
