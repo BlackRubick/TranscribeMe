@@ -9,12 +9,12 @@ import LoginScreen from '../screens/LoginScreen';
 import LoginReg from '../screens/LoginReg';
 import Verclase from '../screens/Verclase';
 import VerTranscripciones from '../screens/VerTranscripciones';
-import JoinClass from '../screens/JoinClass'; // Importa la nueva pantalla
-import IniciarTranscripcion from '../screens/IniciarTranscripcion'; // Importa la nueva pantalla
-import SolicitudesBajas from '../screens/SolicitudesBajas'; 
-import JoinTranscription from '../screens/JoinTranscription';// Importa la nueva pantalla
-import Ayuda from '../screens/Ayuda'; // Importa la nueva pantalla
-import AvisoPrivacidad from '../screens/AvisoPrivacidad'; // Importa la nueva pantalla
+import JoinClass from '../screens/JoinClass';
+import IniciarTranscripcion from '../screens/IniciarTranscripcion';
+import SolicitudesBajas from '../screens/SolicitudesBajas';
+import JoinTranscription from '../screens/JoinTranscription';
+import Ayuda from '../screens/Ayuda';
+import AvisoPrivacidad from '../screens/AvisoPrivacidad';
 import { User } from '../models/User';
 
 export type RootStackParamList = {
@@ -28,14 +28,14 @@ export type RootStackParamList = {
   Cerrar: undefined;
   Create: undefined;
   Archivo: undefined;
-  VerTranscripciones: undefined; 
+  VerTranscripciones: undefined;
   Verclase: { course: { id: number; title: string; instructor: string; students: number; image: any } };
-  JoinClass: undefined; // Agrega la nueva pantalla al tipo RootStackParamList
-  JoinTranscription: undefined; 
-  IniciarTranscripcion: undefined; // Agrega la nueva pantalla al tipo RootStackParamList
-  SolicitudesBajas: undefined; // Agrega la nueva pantalla al tipo RootStackParamList
-  Ayuda: undefined; // Agrega la nueva pantalla al tipo RootStackParamList
-  AvisoPrivacidad: undefined; // Agrega la nueva pantalla al tipo RootStackParamList
+  JoinClass: undefined;
+  JoinTranscription: undefined;
+  IniciarTranscripcion: undefined;
+  SolicitudesBajas: undefined;
+  Ayuda: undefined;
+  AvisoPrivacidad: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -89,32 +89,32 @@ const AppNavigator: React.FC = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="JoinClass" // Agrega la nueva pantalla aquí
+        name="JoinClass"
         component={JoinClass}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="JoinTranscription" // Agrega la nueva pantalla aquí
+        name="JoinTranscription"
         component={JoinTranscription}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="IniciarTranscripcion" // Agrega la nueva pantalla aquí
+        name="IniciarTranscripcion"
         component={IniciarTranscripcion}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="SolicitudesBajas" // Agrega la nueva pantalla aquí
+        name="SolicitudesBajas"
         component={SolicitudesBajas}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Ayuda" // Agrega la nueva pantalla aquí
+        name="Ayuda"
         component={Ayuda}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="AvisoPrivacidad" // Agrega la nueva pantalla aquí
+        name="AvisoPrivacidad"
         component={AvisoPrivacidad}
         options={{ headerShown: false }}
       />

@@ -1,11 +1,12 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Alert, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from '@expo/vector-icons';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -13,15 +14,77 @@ type Props = {
   navigation: HomeScreenNavigationProp;
 };
 
-const courses = [
-  { id: 1, title: 'Minería de datos', instructor: 'Horacio Irán Solís Cisneros', students: 22, image: require('../../assets/instructor1.png') },
-  { id: 2, title: 'Compiladores e intérpretes', instructor: 'Diana Veatriz Vazquez', students: 32, image: require('../../assets/instructor2.png') },
-  { id: 3, title: 'Probabilidad y Estadística', instructor: 'Horacio Irán Solís Cisneros', students: 22, image: require('../../assets/instructor3.png') },
-  { id: 4, title: 'Programación Móvil', instructor: 'Horacio Irán Solís Cisneros', students: 22, image: require('../../assets/instructor4.png') },
-  { id: 5, title: 'Minería de datos', instructor: 'Horacio Irán Solís Cisneros', students: 22, image: require('../../assets/instructor5.png') },
-];
-
 const Home: React.FC<Props> = ({ navigation }) => {
+  const [courses, setCourses] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        const token = await AsyncStorage.getItem('userToken');
+
+        if (!userId || !token) {
+          throw new Error('User ID or token not found');
+        }
+
+        console.log("User ID:", userId);
+        console.log("Token:", token);
+
+        const myHeaders = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        };
+
+        const response = await fetch(`http://10.0.2.2:3004/api/v1/list-users-classes/${userId}`, {
+          method: 'GET',
+          headers: myHeaders,
+        });
+
+        console.log("Class IDs response status:", response.status);
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Class IDs data:", data);
+
+          if (data.length === 0) {
+            console.log("No class IDs found for user");
+            return;
+          }
+
+          const classIds = data.map((item: any) => ({ class_id: item.class_id }));
+          console.log("Mapped class IDs:", classIds);
+
+          const classesResponse = await fetch(`http://10.0.2.2:3004/api/v1/alumno-no-archivado/users-classes/status`, {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(classIds),
+          });
+
+          console.log("Classes response status:", classesResponse.status);
+
+          if (classesResponse.ok) {
+            const classesData = await classesResponse.json();
+            console.log("Classes data:", classesData);
+            setCourses(classesData);
+          } else {
+            const errorText = await classesResponse.text();
+            console.error("Failed to fetch classes:", errorText);
+            throw new Error('Failed to fetch classes');
+          }
+        } else {
+          const errorText = await response.text();
+          console.error("Failed to fetch class IDs:", errorText);
+          throw new Error('Failed to fetch class IDs');
+        }
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+        Alert.alert("Error", "Error fetching classes");
+      }
+    };
+
+    fetchClasses();
+  }, []);
+
   return (
     <LinearGradient colors={['#5E9CFA', '#8A2BE2']} style={styles.container}>
       <Header />
@@ -30,13 +93,13 @@ const Home: React.FC<Props> = ({ navigation }) => {
         <Text style={styles.title}>Materias</Text>
         {courses.map((course) => (
           <TouchableOpacity key={course.id} style={styles.courseCard} onPress={() => navigation.navigate('Verclase', { course })}>
-            <Text style={styles.courseTitle}>7B - {course.title}</Text>
-            <Text style={styles.instructor}>{course.instructor}</Text>
+            <Text style={styles.courseTitle}>{course.grade}B - {course.name}</Text>
+            <Text style={styles.instructor}>{course.teacher}</Text>
             <View style={styles.courseFooter}>
-              <Image source={course.image} style={styles.instructorImage} />
+              <Image source={require('../../assets/instructor1.png')} style={styles.instructorImage} />
               <View style={styles.studentsContainer}>
                 <FontAwesome name="users" size={16} color="black" />
-                <Text style={styles.students}>{course.students}</Text>
+                <Text style={styles.students}>{course.number_of_students}</Text>
               </View>
             </View>
           </TouchableOpacity>
