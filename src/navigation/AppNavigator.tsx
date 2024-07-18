@@ -28,8 +28,8 @@ export type RootStackParamList = {
   Cerrar: undefined;
   Create: undefined;
   Archivo: undefined;
-  VerTranscripciones: undefined;
-  Verclase: { course: { id: number; title: string; instructor: string; students: number; image: any } };
+  VerTranscripciones: { transcript: any };
+  Verclase: { course: { id: string; name: string; teacher: string; number_of_students: number; group: string; grade: number; status: string; code: string; } };
   JoinClass: undefined;
   JoinTranscription: undefined;
   IniciarTranscripcion: undefined;
