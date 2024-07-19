@@ -12,14 +12,14 @@ import VerTranscripciones from '../screens/VerTranscripciones';
 import JoinClass from '../screens/JoinClass'; // Importa la nueva pantalla
 import IniciarTranscripcion from '../screens/IniciarTranscripcion'; // Importa la nueva pantalla
 import SolicitudesBajas from '../screens/SolicitudesBajas'; 
-import JoinTranscription from '../screens/JoinTranscription';// Importa la nueva pantalla
+import JoinTranscription from '../screens/JoinTranscription'; // Importa la nueva pantalla
 import Ayuda from '../screens/Ayuda'; // Importa la nueva pantalla
 import AvisoPrivacidad from '../screens/AvisoPrivacidad'; // Importa la nueva pantalla
 import { User } from '../models/User';
 
 export type RootStackParamList = {
   LoginReg: undefined;
-  Login: undefined;
+  LoginScreen: undefined;
   Register: undefined;
   Chat: { user: User };
   List: undefined;
@@ -42,14 +42,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
         name="LoginReg"
         component={LoginReg}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Login"
+        name="LoginScreen"
         component={LoginScreen}
         options={{ headerShown: false }}
       />

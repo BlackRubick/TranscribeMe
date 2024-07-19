@@ -6,15 +6,16 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Alert,
+  Modal,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { LinearGradient } from "expo-linear-gradient";
-import axios from "axios";
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { FontAwesome } from "@expo/vector-icons";
 
+//login
 type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
 
 type Props = {
@@ -24,7 +25,26 @@ type Props = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "space-between", // Ensures content is spaced out with footer at the bottom
+  },
+  header: {
+    flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    backgroundColor: "#5E9CFA",
+  },
+  menuIcon: {
+    marginLeft: 10,
+  },
+  profileIcon: {
+    marginRight: 10,
+  },
+  headerText: {
+    fontFamily: "K2D",
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   formContainer: {
     margin: 20,
@@ -37,7 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-    textAlign: "center",
+    textAlign:"center",
   },
   input: {
     fontFamily: "K2D",
@@ -64,79 +84,108 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
   },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    backgroundColor: "#FFFFFF",
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+  },
+  footerButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  footerButtonText: {
+    fontFamily: "K2D",
+    color: "black",
+    fontSize: 15,
+  },
   illustration: {
     width: 150,
     height: 150,
     marginVertical: 20,
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  menu: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 8,
+    marginTop: 50,
+    marginLeft: 10,
+  },
+  menuItem: {
+    paddingVertical: 10,
+  },
+  menuItemText: {
+    fontFamily: "K2D",
+    fontSize: 18,
+    color: "black",
+  },
 });
 
 const Create: React.FC<Props> = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [grade, setGrade] = useState("");
-  const [group, setGroup] = useState("");
-  const [numberOfStudents, setNumberOfStudents] = useState("");
-  const [teacher, setTeacher] = useState("");
-  const [status, setStatus] = useState("active");
+  const [menuVisible, setMenuVisible] = useState(false);
 
-  const validateFields = () => {
-    if (name.length === 0 || name.length > 50) {
-      Alert.alert("Error en la creación", "El nombre de la clase debe tener entre 1 y 50 caracteres");
-      return false;
-    }
-
-    const gradeNumber = parseInt(grade);
-    if (isNaN(gradeNumber) || gradeNumber < 1 || gradeNumber > 12) {
-      Alert.alert("Error en la creación", "El grado debe ser un número entre 1 y 12");
-      return false;
-    }
-
-    if (group.length === 0 || group.length > 10) {
-      Alert.alert("Error en la creación", "El grupo debe tener entre 1 y 10 caracteres");
-      return false;
-    }
-
-    const numberOfStudentsNumber = parseInt(numberOfStudents);
-    if (isNaN(numberOfStudentsNumber) || numberOfStudentsNumber < 1 || numberOfStudentsNumber > 100) {
-      Alert.alert("Error en la creación", "La cantidad de estudiantes debe ser un número entre 1 y 100");
-      return false;
-    }
-
-    if (teacher.length === 0 || teacher.length > 50) {
-      Alert.alert("Error en la creación", "El nombre del profesor debe tener entre 1 y 50 caracteres");
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleCreateClass = async () => {
-    if (!validateFields()) return;
-
-    const classData = {
-      name,
-      number_of_students: parseInt(numberOfStudents),
-      teacher,
-      status,
-      group,
-      grade: parseInt(grade),
-    };
-
-    console.log("Datos de la clase:", classData);
-
-    try {
-      const response = await axios.post("http://10.0.2.2:3002/class", classData);
-      console.log("Respuesta del servidor:", response.data);
-      Alert.alert("Éxito", "Clase creada exitosamente");
-    } catch (error) {
-      console.error("Error al crear la clase:", error);
-      Alert.alert("Error", "Error al crear la clase");
-    }
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
   };
 
   return (
     <View style={styles.container}>
-      <Header />
+      <LinearGradient
+        colors={["#5E9CFA", "#8A2BE2"]}
+        style={styles.header}
+      >
+        <TouchableOpacity onPress={toggleMenu}>
+          <FontAwesome name="bars" size={24} color="white" style={styles.menuIcon} />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>TranscribeMe</Text>
+        <FontAwesome name="user" size={24} color="white" style={styles.profileIcon} />
+      </LinearGradient>
+
+      <Modal
+        transparent={true}
+        visible={menuVisible}
+        animationType="fade"
+        onRequestClose={toggleMenu}
+      >
+        <TouchableWithoutFeedback onPress={toggleMenu}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.menu}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => { toggleMenu(); navigation.navigate("Cerrar"); }}
+              >
+                <Text style={styles.menuItemText}>Cerrar Sesion</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => { toggleMenu(); navigation.navigate("Archivo"); }}
+              >
+                <Text style={styles.menuItemText}>Clases Archivadas</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => { toggleMenu(); navigation.navigate("Baja"); }}
+              >
+                <Text style={styles.menuItemText}>Dar de Baja a una Materia</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => { toggleMenu(); navigation.navigate("Create"); }}
+              >
+                <Text style={styles.menuItemText}>Crear Clase</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
       <View style={{ alignItems: "center" }}>
         <Image source={require("../../assets/create.png")} style={styles.illustration} />
@@ -148,43 +197,36 @@ const Create: React.FC<Props> = ({ navigation }) => {
           style={styles.input}
           placeholder="Nombre de la clase"
           placeholderTextColor="#aaa"
-          value={name}
-          onChangeText={setName}
         />
         <TextInput
           style={styles.input}
           placeholder="Grado"
           placeholderTextColor="#aaa"
-          value={grade}
-          onChangeText={setGrade}
         />
         <TextInput
           style={styles.input}
           placeholder="Grupo"
           placeholderTextColor="#aaa"
-          value={group}
-          onChangeText={setGroup}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Cantidad de estudiantes"
-          placeholderTextColor="#aaa"
-          value={numberOfStudents}
-          onChangeText={setNumberOfStudents}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Profesor"
-          placeholderTextColor="#aaa"
-          value={teacher}
-          onChangeText={setTeacher}
-        />
-        <TouchableOpacity style={styles.createButton} onPress={handleCreateClass}>
+        <TouchableOpacity style={styles.createButton}>
           <Text style={styles.createButtonText}>Crear</Text>
         </TouchableOpacity>
       </View>
 
-      <Footer />
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate("Home")}>
+          <FontAwesome name="home" size={24} color="black" />
+          <Text style={styles.footerButtonText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate("Home")}>
+          <FontAwesome name="plus" size={24} color="black" />
+          <Text style={styles.footerButtonText}>Unirme a clase</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate("Home")}>
+          <FontAwesome name="file-text" size={24} color="black" />
+          <Text style={styles.footerButtonText}>Unirme a transcripción</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
