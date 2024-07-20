@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FontAwesome } from '@expo/vector-icons';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type JoinClassScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JoinClass'>;
 
@@ -14,10 +15,56 @@ type Props = {
 };
 
 const JoinClass: React.FC<Props> = ({ navigation }) => {
-  const [menuVisible, setMenuVisible] = useState(false);
+  const [codeClass, setCodeClass] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
+  const [classId, setClassId] = useState<string>(''); // Asumes que tienes el class id desde el contexto o props
 
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
+  useEffect(() => {
+    const getUserId = async () => {
+      const storedUserId = await AsyncStorage.getItem('userId');
+      if (storedUserId) {
+        setUserId(storedUserId);
+      } else {
+        Alert.alert('Error', 'No se pudo obtener el ID del usuario');
+      }
+    };
+
+    getUserId();
+  }, []);
+
+  const joinClass = async () => {
+    if (!userId || !classId || !codeClass) {
+      Alert.alert('Error', 'Por favor, complete todos los campos.');
+      return;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+
+      const myHeaders = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+
+      // Primera petición
+      await axios.post(`http://10.0.2.2:3004/api/v1/users-classes/${userId}/${classId}/${codeClass}`, {}, { headers: myHeaders });
+
+      // Segunda petición
+      await axios.put(`http://10.0.2.2:3004/api/v1/class/add-number-student/${classId}`, {}, { headers: myHeaders });
+
+      Alert.alert('Éxito', 'Te has unido exitosamente a la clase');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios Error:', error.message);
+        console.error('Axios Error Response:', error.response?.data);
+      } else {
+        console.error('Unexpected Error:', error);
+      }
+      Alert.alert('Error', 'Hubo un error al unirse a la clase');
+    }
   };
 
   return (
@@ -35,12 +82,21 @@ const JoinClass: React.FC<Props> = ({ navigation }) => {
             style={styles.input}
             placeholder="XXXXXX"
             placeholderTextColor="#aaa"
+            value={codeClass}
+            onChangeText={setCodeClass}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Class ID"
+            placeholderTextColor="#aaa"
+            value={classId}
+            onChangeText={setClassId}
           />
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.joinButton}>
+            <TouchableOpacity style={styles.joinButton} onPress={joinClass}>
               <Text style={styles.joinButtonText}>Unirse</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton}>
+            <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
               <Text style={styles.cancelButtonText}>Cancelar</Text>
             </TouchableOpacity>
           </View>

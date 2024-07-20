@@ -7,7 +7,6 @@ import tw from "../styles/tailwind";
 import { useUserStore } from '../store/UserStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
 
 type Props = {
@@ -134,7 +133,6 @@ const styles = StyleSheet.create({
   }
 });
 
-
 const LoginReg: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -144,22 +142,22 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
-  
+
   const handleLogin = async () => {
     if (!validateEmail(email)) {
       Alert.alert("Error en el inicio de sesión", "Correo electrónico inválido");
       return;
     }
-  
+
     if (password.length < 6 || password.length > 20) {
       Alert.alert("Error en el inicio de sesión", "La contraseña debe tener entre 6 y 20 caracteres");
       return;
     }
-  
+
     try {
       console.log("Iniciando sesión...");
       console.log("Datos de inicio de sesión:", { email, password });
-  
+
       const response = await fetch('http://10.0.2.2:3004/api/v1/users/login', {
         method: 'POST',
         headers: {
@@ -170,22 +168,26 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
           password,
         }),
       });
-  
+
       console.log("Respuesta del servidor:", response);
-  
+
       const responseText = await response.text();
       console.log("Texto de respuesta del servidor:", responseText);
-  
+
       if (response.ok) {
         const responseData = JSON.parse(responseText);
         console.log("Datos de respuesta:", responseData);
-  
+
         const { token, user } = responseData;
-  
+
         if (user && user.id) {
           await AsyncStorage.setItem('userToken', token);
           await AsyncStorage.setItem('userId', user.id);
-  
+
+          if (user.teacher) {
+            await AsyncStorage.setItem('userTeacher', user.teacher);
+          }
+
           setUser({ email });
           Alert.alert("Inicio de sesión exitoso", "Bienvenido de nuevo");
           navigation.navigate("Home");
@@ -201,7 +203,7 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
       Alert.alert("Error en el inicio de sesión", "Hubo un problema al iniciar sesión");
     }
   };
-  
+
   return (
     <LinearGradient
       colors={['#5E9CFA', '#8A2BE2']}
@@ -219,7 +221,7 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonInactive}
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => navigation.navigate("Register")}
             >
               <Text style={styles.buttonText}>Registrar</Text>
             </TouchableOpacity>

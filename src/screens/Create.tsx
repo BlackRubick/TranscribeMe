@@ -5,6 +5,7 @@ import { RootStackParamList } from "../navigation/AppNavigator";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
 
@@ -146,13 +147,51 @@ const Create: React.FC<Props> = ({ navigation }) => {
       console.log("Texto de respuesta del servidor:", responseText);
 
       if (response.ok) {
-        Alert.alert("Éxito", "Clase creada exitosamente");
+        const createdClass = JSON.parse(responseText);
+        const classId = createdClass.id;
+
+        // Inscribirse a la clase creada
+        await joinClass(userId, classId, createdClass.code);
+
+        Alert.alert("Éxito", "Clase creada e inscrito exitosamente");
       } else {
-        Alert.alert("Error", "Error al crear la clase");
+        Alert.alert("Error", `Error al crear la clase: ${responseText}`);
       }
     } catch (error) {
       console.error("Error al crear la clase:", error);
       Alert.alert("Error", "Error al crear la clase");
+    }
+  };
+
+  const joinClass = async (userId: string, classId: string, codeClass: string) => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+
+      const myHeaders = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+
+      // Primera petición
+      await axios.post(`http://10.0.2.2:3004/api/v1/users-classes/${userId}/${classId}/${codeClass}`, {}, { headers: myHeaders });
+
+      // Segunda petición
+      await axios.put(`http://10.0.2.2:3004/api/v1/class/add-number-student/${classId}`, {}, { headers: myHeaders });
+
+      console.log('Te has inscrito exitosamente a la clase');
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios Error:', error.message);
+        console.error('Axios Error Response:', error.response?.data);
+      } else if (error instanceof Error) {
+        console.error('Unexpected Error:', error.message);
+      } else {
+        console.error('Unknown Error:', error);
+      }
+      Alert.alert('Error', 'Hubo un error al inscribirse a la clase');
     }
   };
 
