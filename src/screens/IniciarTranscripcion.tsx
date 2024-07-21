@@ -2,18 +2,31 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from '@expo/vector-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation/AppNavigator';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-const IniciarTranscripcion: React.FC = () => {
+type IniciarTranscripcionNavigationProp = StackNavigationProp<RootStackParamList, 'IniciarTranscripcion'>;
+type IniciarTranscripcionRouteProp = RouteProp<RootStackParamList, 'IniciarTranscripcion'>;
+
+type Props = {
+  navigation: IniciarTranscripcionNavigationProp;
+  route: IniciarTranscripcionRouteProp;
+};
+
+const IniciarTranscripcion: React.FC<Props> = ({ route }) => {
+  const { course } = route.params;
+
   return (
     <LinearGradient colors={['#5E9CFA', '#8A2BE2']} style={styles.container}>
       <Header />
       <View style={styles.content}>
-        <Text style={styles.courseTitle}>Minería de datos - 7B</Text>
+        <Text style={styles.courseTitle}>{course.name} - {course.grade}B</Text>
         <View style={styles.instructorContainer}>
           <Image source={require('../../assets/instructor1.png')} style={styles.instructorImage} />
-          <Text style={styles.instructorName}>Horacio Irán Solís Cisneros</Text>
+          <Text style={styles.instructorName}>{course.teacher}</Text>
           <Text style={styles.liveText}>Transcripción en vivo</Text>
         </View>
         <Image source={require('../../assets/voice-recorder.png')} style={styles.recorderImage} />

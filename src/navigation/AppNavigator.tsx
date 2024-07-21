@@ -32,7 +32,7 @@ export type RootStackParamList = {
   Verclase: { course: { id: string; name: string; teacher: string; number_of_students: number; group: string; grade: number; status: string; code: string; } };
   JoinClass: undefined;
   JoinTranscription: undefined;
-  IniciarTranscripcion: undefined;
+  IniciarTranscripcion: { course: { id: string; name: string; teacher: string; number_of_students: number; group: string; grade: number; status: string; code: string; } };
   SolicitudesBajas: undefined;
   Ayuda: undefined;
   AvisoPrivacidad: undefined;

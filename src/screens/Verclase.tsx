@@ -90,6 +90,12 @@ const Verclase: React.FC<Props> = ({ route, navigation }) => {
             </View>
           </TouchableOpacity>
         ))}
+        <TouchableOpacity 
+          style={styles.transcriptionButton}
+          onPress={() => navigation.navigate('IniciarTranscripcion', { course })}
+        >
+          <Text style={styles.transcriptionButtonText}>Iniciar Transcripción</Text>
+        </TouchableOpacity>
       </ScrollView>
       <CompartirQR visible={modalVisible} onClose={toggleModal} />
       <Footer />
@@ -170,6 +176,19 @@ const styles = StyleSheet.create({
   transcriptIcons: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  transcriptionButton: {
+    backgroundColor: '#5E9CFA',
+    padding: 15,
+    borderRadius: 10,
+    marginHorizontal: 16,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  transcriptionButtonText: {
+    fontFamily: 'K2D',
+    color: 'white',
+    fontSize: 16,
   }
 });
 
