@@ -17,7 +17,7 @@ type Props = {
 const JoinClass: React.FC<Props> = ({ navigation }) => {
   const [codeClass, setCodeClass] = useState('');
   const [userId, setUserId] = useState<string | null>(null);
-  const [classId, setClassId] = useState<string>(''); // Asumes que tienes el class id desde el contexto o props
+  const [reference, setReference] = useState<string>(''); // Asumes que tienes la referencia desde el contexto o props
 
   useEffect(() => {
     const getUserId = async () => {
@@ -32,11 +32,30 @@ const JoinClass: React.FC<Props> = ({ navigation }) => {
     getUserId();
   }, []);
 
-  const joinClass = async () => {
-    if (!userId || !classId || !codeClass) {
-      Alert.alert('Error', 'Por favor, complete todos los campos.');
-      return;
+  const validateInput = () => {
+    const codeRegex = /^[A-Za-z0-9]{10,15}$/; // Regex validation for codeClass (alphanumeric, between 10 and 15 characters)
+    const referenceRegex = /^[A-Za-z0-9-]{36,40}$/; // Regex validation for reference (alphanumeric, hyphens, between 36 and 40 characters)
+
+    if (!codeClass.match(codeRegex)) {
+      Alert.alert('Error', 'El código de la clase debe ser alfanumérico y tener entre 10 y 15 caracteres.');
+      return false;
     }
+
+    if (!reference.match(referenceRegex)) {
+      Alert.alert('Error', 'La referencia debe ser alfanumérica, puede contener guiones y tener entre 36 y 40 caracteres.');
+      return false;
+    }
+
+    if (!userId || !reference || !codeClass) {
+      Alert.alert('Error', 'Por favor, complete todos los campos.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const joinClass = async () => {
+    if (!validateInput()) return;
 
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -50,10 +69,10 @@ const JoinClass: React.FC<Props> = ({ navigation }) => {
       };
 
       // Primera petición
-      await axios.post(`http://10.0.2.2:3004/api/v1/users-classes/${userId}/${classId}/${codeClass}`, {}, { headers: myHeaders });
+      await axios.post(`http://10.0.2.2:3004/api/v1/users-classes/${userId}/${reference}/${codeClass}`, {}, { headers: myHeaders });
 
       // Segunda petición
-      await axios.put(`http://10.0.2.2:3004/api/v1/class/add-number-student/${classId}`, {}, { headers: myHeaders });
+      await axios.put(`http://10.0.2.2:3004/api/v1/class/add-number-student/${reference}`, {}, { headers: myHeaders });
 
       Alert.alert('Éxito', 'Te has unido exitosamente a la clase');
     } catch (error) {
@@ -80,17 +99,17 @@ const JoinClass: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.subtitle}>Ingrese el código proporcionado por su maestro:</Text>
           <TextInput
             style={styles.input}
-            placeholder="XXXXXX"
+            placeholder="Código de clase"
             placeholderTextColor="#aaa"
             value={codeClass}
             onChangeText={setCodeClass}
           />
           <TextInput
             style={styles.input}
-            placeholder="Class ID"
+            placeholder="Referencia"
             placeholderTextColor="#aaa"
-            value={classId}
-            onChangeText={setClassId}
+            value={reference}
+            onChangeText={setReference}
           />
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.joinButton} onPress={joinClass}>

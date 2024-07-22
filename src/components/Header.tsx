@@ -64,17 +64,9 @@ const Header: React.FC = () => {
                 <Ionicons name="create-outline" size={20} color="black" style={styles.menuIcon} />
                 <Text style={styles.menuItemText}>Crear Clase</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItem} onPress={() => { toggleMenu(); navigation.navigate('IniciarTranscripcion'); }}>
-                <FontAwesome name="play-circle" size={20} color="black" style={styles.menuIcon} />
-                <Text style={styles.menuItemText}>Iniciar transcripción</Text>
-              </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={() => { toggleMenu(); navigation.navigate('SolicitudesBajas'); }}>
                 <FontAwesome name="file-text" size={20} color="black" style={styles.menuIcon} />
                 <Text style={styles.menuItemText}>Solicitudes de bajas</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItem} onPress={() => { toggleMenu(); navigation.navigate('Ayuda'); }}>
-                <FontAwesome name="question-circle" size={20} color="black" style={styles.menuIcon} />
-                <Text style={styles.menuItemText}>Ayuda</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={() => { toggleMenu(); navigation.navigate('AvisoPrivacidad'); }}>
                 <FontAwesome name="file" size={20} color="black" style={styles.menuIcon} />
