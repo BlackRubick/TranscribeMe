@@ -48,6 +48,10 @@ const VerTranscripciones: React.FC<Props> = ({ route, navigation }) => {
         <View style={styles.summaryCard}>
           <Text style={styles.summaryText}>{transcript.summary}</Text>
         </View>
+        <TouchableOpacity style={styles.shareButton} onPress={() => { /* Lógica para compartir QR */ }}>
+          <FontAwesome name="qrcode" size={24} color="white" />
+          <Text style={styles.shareButtonText}>Compartir QR</Text>
+        </TouchableOpacity>
       </ScrollView>
       <Footer />
     </LinearGradient>
@@ -154,6 +158,22 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+  },
+  shareButton: {
+    backgroundColor: '#8A2BE2',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  shareButtonText: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    color: 'white',
+    marginLeft: 10,
   },
 });
 
