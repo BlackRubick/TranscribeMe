@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { LinearGradient } from 'expo-linear-gradient';
 import tw from "../styles/tailwind";
-import { useUserStore } from '../store/UserStore';
+import { useUserStore } from '../../store/UserStore';
 
 type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
 

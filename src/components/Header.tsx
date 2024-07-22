@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, Animated, TouchableWit
 import { FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { useUserStore } from '../store/UserStore';
+import { useUserStore } from '../../store/UserStore';
 
 const Header: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);

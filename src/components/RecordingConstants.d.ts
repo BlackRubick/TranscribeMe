@@ -9,7 +9,8 @@ export declare enum AndroidOutputFormat {
     AAC_ADTS = 6,
     RTP_AVP = 7,
     MPEG2TS = 8,
-    WEBM = 9
+    WEBM = 9,
+    WAVE
 }
 export declare enum AndroidAudioEncoder {
     DEFAULT = 0,
@@ -17,7 +18,8 @@ export declare enum AndroidAudioEncoder {
     AMR_WB = 2,
     AAC = 3,
     HE_AAC = 4,
-    AAC_ELD = 5
+    AAC_ELD = 5,
+    PCM_16BIT
 }
 /**
  * > **Note** Not all of the iOS formats included in this list of constants are currently supported by iOS,
