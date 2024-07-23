@@ -1,67 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import styles from '../styles/CreateStyles';
 
 type LoginRegScreenNavigationProp = StackNavigationProp<RootStackParamList, "LoginReg">;
 
 type Props = {
   navigation: LoginRegScreenNavigationProp;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  formContainer: {
-    margin: 20,
-    backgroundColor: "#92C4FF",
-    borderRadius: 20,
-    padding: 20,
-  },
-  formHeader: {
-    fontFamily: "K2D",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  input: {
-    fontFamily: "K2D",
-    fontSize: 15,
-    color: "black",
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-    backgroundColor: "white",
-  },
-  createButton: {
-    backgroundColor: "#8A2BE2",
-    paddingVertical: 12,
-    borderRadius: 25,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  createButtonText: {
-    fontFamily: "K2D",
-    color: "white",
-    fontSize: 15,
-  },
-  illustration: {
-    width: 150,
-    height: 150,
-    marginVertical: 20,
-  },
-});
 
 const Create: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState("");

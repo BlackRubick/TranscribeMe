@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,6 +7,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles/ArchivoStyles';
 
 type ArchivoScreenNavigationProp = StackNavigationProp<RootStackParamList, "Archivo">;
 
@@ -124,58 +125,5 @@ const Archivo: React.FC<Props> = ({ navigation }) => {
     </LinearGradient>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    padding: 16,
-  },
-  title: {
-    fontFamily: "K2D",
-    color: "white",
-    fontSize: 20,
-    marginBottom: 16,
-    textAlign: "right",
-  },
-  courseCard: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 16,
-  },
-  courseTitle: {
-    fontFamily: "K2D",
-    color: "black",
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  instructor: {
-    fontFamily: "K2D",
-    color: "gray",
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  courseFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  instructorImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  studentsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  students: {
-    fontFamily: "K2D",
-    color: "black",
-    marginLeft: 4,
-  },
-});
 
 export default Archivo;

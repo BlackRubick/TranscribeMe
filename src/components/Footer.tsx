@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import styles from './styles/FooterStyles';
 
 const Footer: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -24,23 +25,5 @@ const Footer: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingVertical: 16,
-    backgroundColor: '#DDDD',
-  },
-  footerButton: {
-    alignItems: 'center',
-  },
-  footerButtonText: {
-    fontFamily: 'K2D',
-    color: 'black',
-    marginTop: 4,
-  },
-});
 
 export default Footer;

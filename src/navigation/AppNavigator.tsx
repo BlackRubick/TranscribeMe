@@ -15,20 +15,17 @@ import SolicitudesBajas from '../screens/SolicitudesBajas';
 import JoinTranscription from '../screens/JoinTranscription';
 import Ayuda from '../screens/Ayuda';
 import AvisoPrivacidad from '../screens/AvisoPrivacidad';
-import UserProfile from '../screens/UserProfile';
 import { User } from '../models/User';
 
 export type RootStackParamList = {
   LoginReg: undefined;
-  Login: undefined;
-  Register: undefined;
+  LoginScreen: undefined;
   Chat: { user: User };
   List: undefined;
   Home: undefined;
   Baja: undefined;
   Cerrar: undefined;
   Create: undefined;
-  UserProfile: undefined;
   Archivo: undefined;
   VerTranscripciones: { transcript: any };
   Verclase: { course: { id: string; name: string; teacher: string; number_of_students: number; group: string; grade: number; status: string; code: string; } };
@@ -51,18 +48,13 @@ const AppNavigator: React.FC = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Login"
+        name="LoginScreen"
         component={LoginScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="UserProfile"
-        component={UserProfile}
         options={{ headerShown: false }}
       />
       <Stack.Screen

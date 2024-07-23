@@ -1,0 +1,120 @@
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 20,
+  },
+  classInfoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+    backgroundColor: "#5E9CFA",
+    padding: 16,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  classTitle: {
+    fontFamily: 'K2D',
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  classSubtitle: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    color: 'white',
+  },
+  classDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  transcriptionCard: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  transcriptionTitle: {
+    fontFamily: 'K2D',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  transcriptionInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  transcriptionAuthor: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+  },
+  transcriptionDate: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    color: "gray",
+  },
+  transcriptionText: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    textAlign: 'justify',
+  },
+  summaryButton: {
+    backgroundColor: '#8A2BE2',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  summaryButtonText: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    color: 'white',
+  },
+  summaryCard: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  summaryText: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    textAlign: 'justify',
+  },
+  transcriptImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  shareButton: {
+    backgroundColor: '#8A2BE2',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  shareButtonText: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    color: 'white',
+    marginLeft: 10,
+  },
+});

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Animated, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Animated, TouchableWithoutFeedback } from 'react-native';
 import { FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useUserStore } from '../../store/UserStore';
+import styles from './styles/HeaderStyles';
 
 const Header: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -40,9 +41,6 @@ const Header: React.FC = () => {
           <FontAwesome name="bars" size={24} color="white" style={styles.menuIcon} />
         </TouchableOpacity>
         <Text style={styles.headerText}>TranscribeMe</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('UserProfile')}>
-          <FontAwesome name="user" size={24} color="white" style={styles.profileIcon} />
-        </TouchableOpacity>
       </View>
 
       <Modal
@@ -81,56 +79,5 @@ const Header: React.FC = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#5E9CFA',
-    zIndex: 2,
-  },
-  menuIcon: {
-    marginLeft: 10,
-  },
-  profileIcon: {
-    marginRight: 10,
-  },
-  headerText: {
-    fontFamily: 'K2D',
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    zIndex: 1,
-  },
-  menu: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 250,
-    backgroundColor: 'white',
-    paddingTop: 50,
-    paddingLeft: 10,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-  },
-  menuItemText: {
-    fontFamily: 'K2D',
-    fontSize: 18,
-    color: 'black',
-    marginLeft: 10,
-  },
-});
 
 export default Header;
