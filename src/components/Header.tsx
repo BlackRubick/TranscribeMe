@@ -40,7 +40,9 @@ const Header: React.FC = () => {
           <FontAwesome name="bars" size={24} color="white" style={styles.menuIcon} />
         </TouchableOpacity>
         <Text style={styles.headerText}>TranscribeMe</Text>
-        <FontAwesome name="user" size={24} color="white" style={styles.profileIcon} />
+        <TouchableOpacity onPress={() => navigation.navigate('UserProfile')}>
+          <FontAwesome name="user" size={24} color="white" style={styles.profileIcon} />
+        </TouchableOpacity>
       </View>
 
       <Modal
