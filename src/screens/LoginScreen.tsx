@@ -25,32 +25,50 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     return re.test(String(email).toLowerCase());
   };
 
+  const sanitizeInput = (input: string) => {
+    return input.replace(/[<>"]/g, '').replace(/'/g, '');
+  };
+
+  const sanitizeEmailAndPassword = (input: string) => {
+    return input.replace(/[<>"]/g, '').replace(/'/g, '').trim().toLowerCase();
+  };
+
+  const validatePasswordStrength = (password: string) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,20}$/;
+    return re.test(password);
+  };
+
   const handleRegister = async () => {
-    if (!validateEmail(email)) {
+    const sanitizedEmail = sanitizeEmailAndPassword(email);
+    const sanitizedPassword = password.trim(); // No convertir a minúsculas
+    const sanitizedName = sanitizeInput(name).trim();
+    const sanitizedSurname = sanitizeInput(surname).trim();
+
+    if (!validateEmail(sanitizedEmail)) {
       Alert.alert("Error en el registro", "Correo electrónico inválido");
       return;
     }
 
-    if (password.length < 6 || password.length > 20) {
-      Alert.alert("Error en el registro", "La contraseña debe tener entre 6 y 20 caracteres");
+    if (!validatePasswordStrength(sanitizedPassword)) {
+      Alert.alert("Error en el registro", "La contraseña debe tener entre 6 y 20 caracteres, incluyendo al menos una letra mayúscula, una letra minúscula y un número");
       return;
     }
 
-    if (name.trim() === "" || surname.trim() === "") {
+    if (sanitizedName === "" || sanitizedSurname === "") {
       Alert.alert("Error en el registro", "El nombre y el apellido no pueden estar vacíos");
       return;
     }
 
     try {
       console.log("Iniciando registro...");
-      console.log("Datos de registro:", { email, password, name, surname });
+      console.log("Datos de registro:", { sanitizedEmail, sanitizedPassword, sanitizedName, sanitizedSurname });
 
       // Crear el FormData y agregar los campos
       const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('name', name);
-      formData.append('surname', surname);
+      formData.append('email', sanitizedEmail);
+      formData.append('password', sanitizedPassword);
+      formData.append('name', sanitizedName);
+      formData.append('surname', sanitizedSurname);
 
       console.log("Datos FormData:", formData);
 
@@ -67,7 +85,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       if (response.ok) {
         const responseData = JSON.parse(responseText);
         console.log("Datos de respuesta:", responseData);
-        setUser({ email });
+        setUser({ email: sanitizedEmail });
         Alert.alert("Registro exitoso", "Usuario registrado correctamente");
         navigation.navigate("LoginReg");
       } else {
@@ -117,7 +135,9 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             placeholder="Correo electrónico"
             placeholderTextColor="#aaa"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => setEmail(sanitizeEmailAndPassword(text))}
+            keyboardType="email-address"
+            autoCapitalize="none"
           />
           <TextInput
             style={styles.input}
@@ -125,21 +145,21 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             placeholderTextColor="#aaa"
             secureTextEntry={true}
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(text) => setPassword(sanitizeInput(text))}
           />
           <TextInput
             style={styles.input}
             placeholder="Nombre"
             placeholderTextColor="#aaa"
             value={name}
-            onChangeText={setName}
+            onChangeText={(text) => setName(sanitizeInput(text))}
           />
           <TextInput
             style={styles.input}
             placeholder="Apellido"
             placeholderTextColor="#aaa"
             value={surname}
-            onChangeText={setSurname}
+            onChangeText={(text) => setSurname(sanitizeInput(text))}
           />
           <TouchableOpacity
             style={tw`bg-purple-500 p-4 rounded-full w-full my-2`}

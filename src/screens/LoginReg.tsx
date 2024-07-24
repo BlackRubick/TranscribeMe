@@ -24,20 +24,36 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
     return re.test(String(email).toLowerCase());
   };
 
+  const sanitizeEmail = (input: string) => {
+    return input.replace(/[<>]/g, '').replace(/["']/g, '').trim().toLowerCase();
+  };
+
+  const sanitizePassword = (input: string) => {
+    return input.replace(/[<>]/g, '').replace(/["']/g, '').trim();
+  };
+
+  const validatePasswordStrength = (password: string) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,20}$/;
+    return re.test(password);
+  };
+
   const handleLogin = async () => {
-    if (!validateEmail(email)) {
+    const sanitizedEmail = sanitizeEmail(email);
+    const sanitizedPassword = sanitizePassword(password);
+
+    if (!validateEmail(sanitizedEmail)) {
       Alert.alert("Error en el inicio de sesión", "Correo electrónico inválido");
       return;
     }
 
-    if (password.length < 6 || password.length > 20) {
-      Alert.alert("Error en el inicio de sesión", "La contraseña debe tener entre 6 y 20 caracteres");
+    if (!validatePasswordStrength(sanitizedPassword)) {
+      Alert.alert("Error en el inicio de sesión", "La contraseña debe tener entre 6 y 20 caracteres, incluyendo al menos una letra mayúscula, una letra minúscula y un número");
       return;
     }
 
     try {
       console.log("Iniciando sesión...");
-      console.log("Datos de inicio de sesión:", { email, password });
+      console.log("Datos de inicio de sesión:", { sanitizedEmail, sanitizedPassword });
 
       const response = await fetch('http://10.0.2.2:3004/api/v1/users/login', {
         method: 'POST',
@@ -45,8 +61,8 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email,
-          password,
+          email: sanitizedEmail,
+          password: sanitizedPassword,
         }),
       });
 
@@ -69,7 +85,7 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
             await AsyncStorage.setItem('userTeacher', user.teacher);
           }
 
-          setUser({ email });
+          setUser({ email: sanitizedEmail });
           Alert.alert("Inicio de sesión exitoso", "Bienvenido de nuevo");
           navigation.navigate("Home");
         } else {
@@ -114,7 +130,9 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
             placeholder="Correo electrónico"
             placeholderTextColor="#aaa"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => setEmail(sanitizeEmail(text))}
+            keyboardType="email-address"
+            autoCapitalize="none"
           />
           <TextInput
             style={styles.input}
@@ -122,7 +140,7 @@ const LoginReg: React.FC<Props> = ({ navigation }) => {
             placeholderTextColor="#aaa"
             secureTextEntry={true}
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(text) => setPassword(sanitizePassword(text))}
           />
           <TouchableOpacity
             style={tw`bg-purple-500 p-4 rounded-full w-full my-2`}

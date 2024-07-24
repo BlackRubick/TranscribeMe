@@ -32,24 +32,33 @@ const Create: React.FC<Props> = ({ navigation }) => {
     getUserId();
   }, []);
 
+  const sanitizeInput = (input: string) => {
+    return input.replace(/[<>]/g, '');
+  };
+
   const validateFields = () => {
-    if (name.length === 0 || name.length > 50) {
+    const sanitizedGrade = sanitizeInput(grade);
+    const sanitizedName = sanitizeInput(name);
+    const sanitizedGroup = sanitizeInput(group);
+    const sanitizedTeacher = sanitizeInput(teacher);
+
+    if (sanitizedName.length === 0 || sanitizedName.length > 50) {
       Alert.alert("Error en la creación", "El nombre de la clase debe tener entre 1 y 50 caracteres");
       return false;
     }
 
-    const gradeNumber = parseInt(grade);
+    const gradeNumber = parseInt(sanitizedGrade);
     if (isNaN(gradeNumber) || gradeNumber < 1 || gradeNumber > 12) {
       Alert.alert("Error en la creación", "El grado debe ser un número entre 1 y 12");
       return false;
     }
 
-    if (group.length === 0 || group.length > 10) {
+    if (sanitizedGroup.length === 0 || sanitizedGroup.length > 10) {
       Alert.alert("Error en la creación", "El grupo debe tener entre 1 y 10 caracteres");
       return false;
     }
 
-    if (teacher.length === 0 || teacher.length > 50) {
+    if (sanitizedTeacher.length === 0 || sanitizedTeacher.length > 50) {
       Alert.alert("Error en la creación", "El nombre del profesor debe tener entre 1 y 50 caracteres");
       return false;
     }
@@ -58,6 +67,11 @@ const Create: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleCreateClass = async () => {
+    const sanitizedName = sanitizeInput(name);
+    const sanitizedGrade = sanitizeInput(grade);
+    const sanitizedGroup = sanitizeInput(group);
+    const sanitizedTeacher = sanitizeInput(teacher);
+
     if (!validateFields()) return;
 
     if (!userId) {
@@ -66,12 +80,12 @@ const Create: React.FC<Props> = ({ navigation }) => {
     }
 
     const classData = {
-      name,
+      name: sanitizedName,
       number_of_students: 0,
-      teacher,
+      teacher: sanitizedTeacher,
       status,
-      group,
-      grade: parseInt(grade),
+      group: sanitizedGroup,
+      grade: parseInt(sanitizedGrade),
     };
 
     console.log("Datos de la clase:", classData);
