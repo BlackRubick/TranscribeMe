@@ -151,7 +151,7 @@ const Baja: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonInactive}
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => navigation.navigate("LoginReg")}
             >
               <Text style={styles.buttonText}>Registrar</Text>
             </TouchableOpacity>
@@ -171,11 +171,11 @@ const Baja: React.FC<Props> = ({ navigation }) => {
           />
           <TouchableOpacity
             style={tw`bg-purple-500 p-4 rounded-full w-full my-2`}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("LoginReg")}
           >
             <Text style={styles.buttonText}>Iniciar sesión</Text>
           </TouchableOpacity>
-          <Text style={styles.textQuestion}>¿No tienes una cuenta? <Text style={tw`text-blue-500`} onPress={() => navigation.navigate("Login")}>Regístrate</Text></Text>
+          <Text style={styles.textQuestion}>¿No tienes una cuenta? <Text style={tw`text-blue-500`} onPress={() => navigation.navigate("LoginReg")}>Regístrate</Text></Text>
         </View>
       </View>
     </LinearGradient>

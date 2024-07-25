@@ -20,14 +20,25 @@ type Props = {
 const IniciarTranscripcion: React.FC<Props> = ({ route }) => {
   const { course } = route.params;
   const [transcription, setTranscription] = useState<string>('');
-  
+  const [isSocketConnected, setIsSocketConnected] = useState<boolean>(false);
+
   // Configurar la URL del servidor según la plataforma
   const socketUrl = Platform.OS === 'android' ? 'http://10.0.2.2:5000' : 'http://localhost:5000';
   const socket = io(socketUrl);
 
   useEffect(() => {
+    socket.on('connect', () => {
+      setIsSocketConnected(true);
+      console.log('Socket connected');
+    });
+
     socket.on('transcription', (data) => {
       setTranscription(prevTranscription => prevTranscription + " " + data.transcription);
+    });
+
+    socket.on('disconnect', () => {
+      setIsSocketConnected(false);
+      console.log('Socket disconnected');
     });
 
     return () => {
