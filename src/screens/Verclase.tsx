@@ -7,7 +7,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CompartirQR from '../components/CompartirQR';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles/VerclaseStyles';
 
 type VerClaseScreenNavigationProp = StackNavigationProp<RootStackParamList, "Verclase">;
@@ -26,27 +25,10 @@ const Verclase: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     const fetchTranscriptions = async () => {
       try {
-        const token = await AsyncStorage.getItem('userToken');
-        if (!token) {
-          throw new Error('Token not found');
-        }
-
-        const myHeaders = {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        };
-
-        const response = await fetch(`http://10.0.2.2:3004/api/v1/transcription/${course.id}`, {
-          method: 'GET',
-          headers: myHeaders,
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setTranscriptions(data);
-        } else {
-          throw new Error('Failed to fetch transcriptions');
-        }
+        const response = await fetch('http://10.0.2.2:5000/get_transcriptions'); // Ajusta la URL según sea necesario
+        const data = await response.json();
+        const courseTranscriptions = data.filter((t: any) => t.course_id === course.id);
+        setTranscriptions(courseTranscriptions);
       } catch (error) {
         console.error("Error fetching transcriptions:", error);
         Alert.alert("Error", "Error fetching transcriptions");
@@ -78,11 +60,10 @@ const Verclase: React.FC<Props> = ({ route, navigation }) => {
         {transcriptions.map((transcript) => (
           <TouchableOpacity key={transcript.id} onPress={() => navigation.navigate('VerTranscripciones', { transcript })} style={styles.transcriptCard}>
             <View style={styles.transcriptTextContainer}>
-              <Text style={styles.transcriptTitle}>{transcript.title}</Text>
-              <Text style={styles.transcriptSubtitle}>{transcript.author}</Text>
+              <Text style={styles.transcriptTitle}>Transcripción Guardada {transcript.id}</Text>
+              <Text style={styles.transcriptSubtitle}>{new Date(transcript.date).toLocaleString()}</Text>
             </View>
             <View style={styles.transcriptIcons}>
-              <Text style={styles.transcriptDate}>{transcript.date}</Text>
               <FontAwesome name="calendar" size={20} color="gray" style={{ marginHorizontal: 5 }} />
               <TouchableOpacity onPress={toggleModal}>
                 <FontAwesome name="share-alt" size={20} color="gray" />
@@ -97,7 +78,6 @@ const Verclase: React.FC<Props> = ({ route, navigation }) => {
           <Text style={styles.transcriptionButtonText}>Iniciar Transcripción</Text>
         </TouchableOpacity>
       </ScrollView>
-      <CompartirQR visible={modalVisible} onClose={toggleModal} />
       <Footer />
     </View>
   );

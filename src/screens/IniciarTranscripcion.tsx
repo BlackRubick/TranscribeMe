@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image, Platform, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -23,8 +23,8 @@ const IniciarTranscripcion: React.FC<Props> = ({ route }) => {
   const [isSocketConnected, setIsSocketConnected] = useState<boolean>(false);
 
   // Configurar la URL del servidor según la plataforma
-  const socketUrl = Platform.OS === 'android' ? 'http://10.0.2.2:5000' : 'http://localhost:5000';
-  const socket = io(socketUrl);
+  const serverUrl = Platform.OS === 'android' ? 'http://10.0.2.2:5000' : 'http://localhost:5000';
+  const socket = io(serverUrl);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -34,6 +34,7 @@ const IniciarTranscripcion: React.FC<Props> = ({ route }) => {
 
     socket.on('transcription', (data) => {
       setTranscription(prevTranscription => prevTranscription + " " + data.transcription);
+      console.log('Received transcription:', data.transcription);
     });
 
     socket.on('disconnect', () => {
@@ -45,6 +46,34 @@ const IniciarTranscripcion: React.FC<Props> = ({ route }) => {
       socket.disconnect();
     };
   }, []);
+
+  const saveTranscription = async () => {
+    try {
+      console.log('Saving transcription...');
+      const response = await fetch(`${serverUrl}/save_transcription`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: transcription,
+          courseId: course.id,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Transcription saved successfully');
+        Alert.alert('Success', 'Transcription saved successfully');
+      } else {
+        const errorData = await response.json();
+        console.log('Error saving transcription:', errorData);
+        Alert.alert('Error', `Failed to save transcription: ${errorData.message || response.statusText}`);
+      }
+    } catch (error: any) {
+      console.log('Network error:', error.message);
+      Alert.alert('Error', `Failed to save transcription: ${error.message}`);
+    }
+  };
 
   return (
     <LinearGradient colors={['#5E9CFA', '#8A2BE2']} style={styles.container}>
@@ -69,6 +98,9 @@ const IniciarTranscripcion: React.FC<Props> = ({ route }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.stopButton}>
             <Text style={styles.stopButtonText}>Detener</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.saveButton} onPress={saveTranscription}>
+            <Text style={styles.saveButtonText}>Guardar</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -58,20 +58,27 @@ export default StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '60%',
+    width: '80%', // Adjusted to fit three buttons
     marginBottom: 20,
   },
   startButton: {
     backgroundColor: '#007bff',
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: 'center',
   },
   stopButton: {
     backgroundColor: '#ff0000',
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  saveButton: {
+    backgroundColor: '#28a745', // Green color for the save button
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: 'center',
   },
@@ -81,6 +88,11 @@ export default StyleSheet.create({
     color: 'white',
   },
   stopButtonText: {
+    fontFamily: 'K2D',
+    fontSize: 16,
+    color: 'white',
+  },
+  saveButtonText: {
     fontFamily: 'K2D',
     fontSize: 16,
     color: 'white',
