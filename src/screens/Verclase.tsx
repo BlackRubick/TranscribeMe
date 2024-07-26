@@ -60,7 +60,7 @@ const Verclase: React.FC<Props> = ({ route, navigation }) => {
         {transcriptions.map((transcript) => (
           <TouchableOpacity key={transcript.id} onPress={() => navigation.navigate('VerTranscripciones', { transcript })} style={styles.transcriptCard}>
             <View style={styles.transcriptTextContainer}>
-              <Text style={styles.transcriptTitle}>Transcripción Guardada {transcript.id}</Text>
+              <Text style={styles.transcriptTitle}>Transcripción Guardada</Text>
               <Text style={styles.transcriptSubtitle}>{new Date(transcript.date).toLocaleString()}</Text>
             </View>
             <View style={styles.transcriptIcons}>
